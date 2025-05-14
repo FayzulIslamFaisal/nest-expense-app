@@ -86,7 +86,7 @@ export class ExpenseController {
             return {
                 statusCode: 200,
                 success: true,
-                message: "Income Expense SuccessFully!!!",
+                message: "Fetch Type Expense SuccessFully!!!",
                 result: expense
             }
         } catch (error) {
@@ -111,7 +111,7 @@ export class ExpenseController {
             return {
                 statusCode: 200,
                 success: true,
-                message: "Delete Expense SuccessFully!!!",
+                message: "Expense deleted successfully.",
                 result: expense
             }
         } catch (error) {

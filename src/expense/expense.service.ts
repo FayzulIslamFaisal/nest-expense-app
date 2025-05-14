@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateExpenseDto, UpdateExpenseDto } from './dto/expense.dto';
+import { Type } from '@prisma/client';
 
 @Injectable()
 export class ExpenseService {
@@ -10,7 +11,8 @@ export class ExpenseService {
             select: {
                 id:true,
                 salary:true,
-                source: true
+                source: true,
+                type:true
             }
         });
 
@@ -76,10 +78,38 @@ export class ExpenseService {
 
     }
     async getIncomeExpense(type: string){
-        return "Single expenses...";
+        const validTypes = Object.values(Type); 
+
+        if (!validTypes.includes(type as Type)) {
+            throw new BadRequestException(`Invalid type provided: ${type}`);
+        }
+        const expenseType = await this.prisma.expense.findMany({
+             where: {
+                type: {
+                    equals: type as Type,
+                    // mode: 'insensitive', 
+                },
+        },
+        });
+
+        if (!expenseType || expenseType.length === 0) {
+            throw new NotFoundException(`No records found for type: ${type}`);
+        }
+        
+        return expenseType
     }
     async deleteIncomeExpense(id: string){
-        return "Delete expenses...";
+        const existingExpense = await this.prisma.expense.findUnique({
+            where: { id },
+        });
+
+        if (!existingExpense) {
+            throw new NotFoundException(`No expense found with id: ${id}`);
+        }
+        const deleteExpense = await this.prisma.expense.delete({
+            where: {id}
+        })
+        return deleteExpense;
     }
     
 }

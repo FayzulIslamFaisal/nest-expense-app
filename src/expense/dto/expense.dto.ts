@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
 enum ExpenseType {
   INCOME = 'income',
   EXPENSE = 'expense',
@@ -10,6 +10,7 @@ export class CreateExpenseDto {
 
     @IsNotEmpty()
     @IsNumber()
+    @IsPositive()
     salary: number;
 
     @IsOptional()
@@ -24,6 +25,7 @@ export class UpdateExpenseDto {
 
     @IsOptional()
     @IsNumber()
+    @IsPositive()
     salary?: number;
 
     @IsOptional()
